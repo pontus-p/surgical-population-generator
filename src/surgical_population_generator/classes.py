@@ -20,3 +20,12 @@ class Diagnosis:
         for k, v in self.age_distribution.items():
             ret[k] = v/total_occurances
         return ret
+
+@dataclass
+class Patient:
+    name: str
+    age: int
+    gender: str
+    diagnosis: str
+    LoS: float
+

@@ -11,7 +11,7 @@ def generate_diagnosis_probabilities(diags: list):
     return ret
 
 def generate_population(n: int, diagnosis_probabilities: dict, random_sample=False):
-    """Generates individuals in a list given a probability distribution.
+    """Generates n individuals with a primary diagnosis given a diagnosis probability distribution.
     Result follow the distribution deterministically.
     Rounding errors in small sets are added in based on the probability distribution.
     If random_sample is True, all individuals are sampled randomly.
