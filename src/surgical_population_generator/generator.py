@@ -30,6 +30,8 @@ def generate_population(n: int, diagnosis_probabilities: dict, random_sample=Fal
     assert n == len(distributed_diagnosis_list)
     return distributed_diagnosis_list
 
+def create_patients(n, random_sample=False):
+    return "not implemented"
 
 diags = []
 for k, v in diagnosis_distributions.items():
