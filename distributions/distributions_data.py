@@ -1,4 +1,4 @@
-diagnosis_distributions = {
+diagnosis_dict = {
     "ileus": {
         "name": "ileus",
         "ICD": "K56",

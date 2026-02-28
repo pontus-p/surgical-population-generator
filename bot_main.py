@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 from src.surgical_population_generator import generator
+import os
+TOKEN = os.getenv('DISCORD_TOKEN')
 
 # Setup Intents
 intents = discord.Intents.default()
@@ -41,4 +43,4 @@ async def generate(ctx, count: int, flag: str = None):
         await ctx.send(f"```\n{result}\n```")
 
 
-bot.run('YOUR_BOT_TOKEN_HERE')
+bot.run(TOKEN)

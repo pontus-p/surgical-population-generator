@@ -26,6 +26,6 @@ class Patient:
     name: str
     age: int
     gender: str
-    diagnosis: str
+    diagnosis: Diagnosis
     LoS: float
 
