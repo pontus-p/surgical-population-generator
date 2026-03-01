@@ -1,8 +1,10 @@
 import discord
 from discord.ext import commands
-from src.surgical_population_generator import generator
+# from src.surgical_population_generator import generator
 import os
 TOKEN = os.getenv('DISCORD_TOKEN')
+import generator
+
 
 # Setup Intents
 intents = discord.Intents.default()
@@ -19,7 +21,7 @@ async def on_ready():
 @bot.command()
 async def instructions(ctx):
     """Basic instruction command"""
-    msg = "Usage: !generate [number] [-randomize]\nExample: !generate 10 -randomize"
+    msg = "Usage: !generate [number] [-random_sample]\nExample: !generate 10 -random_sample"
     await ctx.send(msg)
 
 
@@ -30,17 +32,16 @@ async def generate(ctx, count: int, flag: str = None):
     'flag' will capture '-randomize' if provided.
     """
     # Logic to handle your flag
-    is_random = (flag == "-randomize")
+    random_sample = (flag == "-random_sample")
 
     # Call your existing function
     # Assuming your function is named 'create_patients'
-    result = generator.create_patients(count, random_sample=is_random)
+
+    result = generator.create_patients(count, random_sample=random_sample)
 
     # Discord has a 2000 character limit per message
-    if len(result) > 2000:
-        await ctx.send("Output is too long for Discord! Try a smaller number.")
-    else:
-        await ctx.send(f"```\n{result}\n```")
+    for part in result:
+        await ctx.send(f"```\n{part}\n```")
 
 
 bot.run(TOKEN)

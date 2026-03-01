@@ -64,14 +64,27 @@ def select_LoS(diag: Diagnosis):
 
 def create_patients(n: int, random_sample=False):
     patient_population = generate_population(n, diags, random_sample=random_sample)
-    # TODO: formatera det som en string som ska till botten.
+    random.shuffle(patient_population)
     s = ""
     for i, p in enumerate(patient_population):
         s += f"#{i+1}: "
         s += print_patient(p)
         s += "\n"
-    s += f"{len(patient_population)} patients generated."
-    return s
+    partitioned_for_character_limit = []
+    char_count = 0
+    part = ""
+    for line in s.splitlines():
+        char_count += len(line)
+        if char_count > 1500:
+            partitioned_for_character_limit.append(part)
+            char_count = 0
+            part = line+"\n"
+            continue
+        part += line+"\n"
+    partitioned_for_character_limit.append(part)
+    end_message = f"{len(patient_population)} patients generated."
+    partitioned_for_character_limit.append(end_message)
+    return partitioned_for_character_limit
 
 def print_patient(p):
     return f"{p.name} is a {p.age}-year old {p.gender} with {p.diagnosis.name}. LoS is {p.LoS} days."
