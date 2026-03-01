@@ -1,11 +1,12 @@
 from classes import Diagnosis, Patient
-from pprint import pprint
 import random
-from distributions.distributions_data import diagnosis_dict
-from distributions.patient_names import patient_names
+# from src.surgical_population_generator.distributions_data import diagnosis_dict
+from distributions_data import diagnosis_dict
+# from src.surgical_population_generator.patient_names import patient_names
+from patient_names import patient_names
 
 def generate_population(n: int, diags: list, random_sample=False):
-    """Generates n Patient class with a primary diagnosis based on diagnosis probability.
+    """Generates list of n Patient class with a primary diagnosis based on diagnosis probability.
     Result follow the distribution deterministically.
     Rounding errors in small sets are added in based on the probability distribution.
     If random_sample is True, all individuals are sampled randomly.
@@ -20,7 +21,6 @@ def generate_population(n: int, diags: list, random_sample=False):
                 population.append(d)
         patients_to_add_in = n - len(population)
         population.extend(random.choices(diags, weights=probs, k=patients_to_add_in))
-        print("added in random patients: ", patients_to_add_in)
         assert n == len(population)
     patient_population = []
     for d in population:
@@ -30,7 +30,6 @@ def generate_population(n: int, diags: list, random_sample=False):
         LoS = select_LoS(d)
         patient_population.append(Patient(name, age, gender, d, LoS))
     return patient_population
-
 
 def select_gender(diag: Diagnosis):
     if random.random() < diag.male_probability:
@@ -51,11 +50,32 @@ def select_age(diag: Diagnosis):
     return random.randint(lo, hi)
 
 def select_LoS(diag: Diagnosis):
-    return diag.LoS
+    min_val, max_val = 1, 10
+    sigma = (max_val - min_val) / 4
+    mean = diag.LoS
+
+    while True:
+        # random.gauss takes (mean, standard_deviation)
+        num = random.gauss(mean, sigma)
+
+        # Check if the number is within our desired bounds
+        if min_val <= num <= max_val:
+            return int(round(num))  # Round to nearest and convert to integer
 
 def create_patients(n: int, random_sample=False):
     patient_population = generate_population(n, diags, random_sample=random_sample)
     # TODO: formatera det som en string som ska till botten.
+    s = ""
+    for i, p in enumerate(patient_population):
+        s += f"#{i+1}: "
+        s += print_patient(p)
+        s += "\n"
+    s += f"{len(patient_population)} patients generated."
+    return s
+
+def print_patient(p):
+    return f"{p.name} is a {p.age}-year old {p.gender} with {p.diagnosis.name}. LoS is {p.LoS} days."
+
 
 diags = []
 for k, v in diagnosis_dict.items():
@@ -64,5 +84,3 @@ for k, v in diagnosis_dict.items():
 sum_individuals = sum(diag.occurances for diag in diags)
 for d in diags:
     d.probability = d.occurances / sum_individuals
-
-output_string = create_patients(10, random_sample=False)
